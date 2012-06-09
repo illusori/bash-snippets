@@ -1,0 +1,68 @@
+#!/bin/bash
+
+#  I am _so_ going to burn in hell.
+#  Read lines of values from arg 2 and store them in
+#  the arrays of name <prefix>_<column>, using prefix passed in arg 1
+#  and column names passed as args 3+
+function _read_rows_from_value_lines_grouped_by_column() {
+    local prefix="$1"
+    local content="$2"
+    shift 2
+    local columns
+    read -r -a columns <<< "$*"
+
+    local row_count=$(($(wc -l <<< "$content") / ${#columns[*]}))
+    #echo "row_count = $row_count"
+
+    for column in "${columns[@]}"; do
+        #echo "Scrubbing ${prefix}_${column}"
+        unset "${prefix}_${column}"
+    done
+
+    local row_idx=0
+    local column_idx=0
+    local value
+    while read value; do
+        column=${columns[column_idx]}
+        #  Ho hum, I gave up and used eval, couldn't get this working with $(())
+        eval "${prefix}_${column}[${row_idx}]='$value'"
+
+        row_idx=$((row_idx + 1))
+        if [ "$row_idx" -ge "$row_count" ]; then
+            row_idx=0
+            column_idx=$((column_idx + 1))
+        fi
+        echo "Column is $column, column_idx now $column_idx, row_idx now $row_idx"
+    done <<< "$content"
+}
+
+#  Tests
+results1="Assemblage 23
+Ayria
+Naked (God Module RMX)
+Sapphire
+Addendum
+Debris
+2001
+
+80
+100
+5:22
+6:14"
+
+results2="Colony 5
+The Bottle
+Lifeline
+
+80
+4:34"
+
+echo -e "results1\n--------"
+_read_rows_from_value_lines_grouped_by_column "track" "$results1" artist track album year rating tracktime
+echo "track '${track_track[0]}', artist '${track_artist[0]}'"
+echo "track '${track_track[1]}', artist '${track_artist[1]}'"
+
+echo -e "\nresults2\n--------"
+_read_rows_from_value_lines_grouped_by_column "track" "$results2" artist track album year rating tracktime
+echo "track '${track_track[0]}', artist '${track_artist[0]}'"
+echo "track '${track_track[1]}', artist '${track_artist[1]}'"
