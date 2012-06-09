@@ -1,0 +1,61 @@
+#!/bin/bash
+
+#  I am _so_ going to burn in hell.
+#  Read lines of "column value" tuples from arg 2+ and store them in
+#  the arrays of name <prefix>_<column>, using prefix passed in arg 1.
+function _read_rows_from_key_value_lines() {
+    local prefix="$1"
+    shift
+    unset row_idx
+    local column
+    local value
+    while read column value; do
+        if [ -z "$row_idx" ]; then
+            #  First column of first row, row column name as row start marker.
+            local first_column=$column
+            local row_idx=0
+        else
+            if [ "$column" = "$first_column" ]; then
+                #  We've come back around to the first column, start a new row.
+                row_idx=$((row_idx + 1))
+            fi
+        fi
+        if [ "$row_idx" = 0 ]; then
+            #  We've on the first row, clear the column array from previous calls.
+            unset "${prefix}_${column}"
+        fi
+        #  Ho hum, I gave up and used eval, couldn't get this working with $(())
+        eval "${prefix}_${column}[${row_idx}]='$value'"
+    done <<< "$*"
+}
+
+#  Tests
+results1="artist Assemblage 23
+track Naked (God Module RMX)
+album Addendum
+year 2001
+rating 80
+tracktime 5:22
+artist Ayria
+track Sapphire
+album Debris
+year
+rating 100
+tracktime 6:14"
+
+results2="artist Colony 5
+track The Bottle
+album Lifeline
+year
+rating 80
+tracktime 4:34"
+
+echo -e "results1\n--------"
+_read_rows_from_key_value_lines "track" "$results1"
+echo "track '${track_track[0]}', artist '${track_artist[0]}'"
+echo "track '${track_track[1]}', artist '${track_artist[1]}'"
+
+echo -e "\nresults2\n--------"
+_read_rows_from_key_value_lines "track" "$results2"
+echo "track '${track_track[0]}', artist '${track_artist[0]}'"
+echo "track '${track_track[1]}', artist '${track_artist[1]}'"

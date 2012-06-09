@@ -1,0 +1,22 @@
+Bash Snippets
+=============
+
+Just a random collection of snippets for shell scripting in bash
+so that I don't have to keep reinventing the wheel every six months
+when I can't remember where I used something last time.
+
+License
+=======
+
+Individual snippets are fully public domain, no restrictions whatsoever.
+
+The collection as a whole is:
+
+Copyright 2012 Sam Graham.   http://www.illusori.co.uk/
+This work is licensed under a
+Creative Commons Attribution-Share Alike 2.0 UK: England & Wales License
+http://creativecommons.org/licenses/by-sa/2.0/uk/
+In human-readble terms: you're free to copy, distribute and modify
+providing you maintain attribution and licence.
+
+Use at your own risk, no fitness for purpose implied, etc, etc.
