@@ -22,7 +22,8 @@ function _read_rows_from_value_lines() {
     while read value; do
         column=${columns[column_idx]}
         #  Ho hum, I gave up and used eval, couldn't get this working with $(())
-        eval "${prefix}_${column}[${row_idx}]='$value'"
+        printf -v value "%q" "$value"
+        eval "${prefix}_${column}[${row_idx}]=$value"
 
         column_idx=$((column_idx + 1))
         if [ "$column_idx" -ge "${#columns[*]}" ]; then
@@ -45,7 +46,13 @@ Sapphire
 Debris
 
 100
-6:14"
+6:14
+Apoptygma Berzerk
+Kathy's Song
+Welcome To Earth \"Extra bit for testing\"
+
+100
+6:35"
 
 results2="Colony 5
 The Bottle
@@ -56,10 +63,12 @@ Lifeline
 
 echo -e "results1\n--------"
 _read_rows_from_value_lines "track" "$results1" artist track album year rating tracktime
-echo "track '${track_track[0]}', artist '${track_artist[0]}'"
-echo "track '${track_track[1]}', artist '${track_artist[1]}'"
+echo "track '${track_track[0]}', artist '${track_artist[0]}', album '${track_album[0]}'"
+echo "track '${track_track[1]}', artist '${track_artist[1]}', album '${track_album[1]}'"
+echo "track '${track_track[2]}', artist '${track_artist[2]}', album '${track_album[2]}'"
 
 echo -e "\nresults2\n--------"
 _read_rows_from_value_lines "track" "$results2" artist track album year rating tracktime
-echo "track '${track_track[0]}', artist '${track_artist[0]}'"
-echo "track '${track_track[1]}', artist '${track_artist[1]}'"
+echo "track '${track_track[0]}', artist '${track_artist[0]}', album '${track_album[0]}'"
+echo "track '${track_track[1]}', artist '${track_artist[1]}', album '${track_album[1]}'"
+echo "track '${track_track[2]}', artist '${track_artist[2]}', album '${track_album[2]}'"
