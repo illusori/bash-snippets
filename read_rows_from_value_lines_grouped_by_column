@@ -32,7 +32,7 @@ function _read_rows_from_value_lines_grouped_by_column() {
             row_idx=0
             column_idx=$((column_idx + 1))
         fi
-        echo "Column is $column, column_idx now $column_idx, row_idx now $row_idx"
+        #echo "Column is $column, column_idx now $column_idx, row_idx now $row_idx"
     done <<< "$content"
 }
 
